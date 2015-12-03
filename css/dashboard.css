@@ -1,0 +1,186 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 10px;
+}
+
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+  padding-bottom: 1px;
+  border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+  border: 0;
+}
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+.sidebar {
+  display: none;
+}
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    padding-left: 7px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+  }
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+
+/*
+ * Main content
+ */
+
+.main {
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  .main {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+.main .page-header {
+  margin-top: 0;
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+
+.placeholders {
+  padding: 2px;
+  margin-bottom: 2px;
+  text-align: center;
+}
+.placeholders h4 {
+  margin-bottom: 0;
+}
+.placeholder {
+  margin-bottom: 20px;
+}
+.placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+}
+
+#placeholderIframe {
+  frameborder: 0;
+  scrolling: no;
+  width: 100%;
+  height: 400px;
+}
+
+
+    #algo{
+        height:200px;
+        line-height: 1px;
+        font: arial;
+    }
+    #example,.prims{
+        display: inline;
+    }
+   
+    .side{
+    float:left;
+    width:60%;
+    height:500px;
+    background:white;
+    /*border:2px solid black;*/
+    margin-left: 0px;
+    line-height: 15px; 
+  }
+  .sideright{
+    font-family: "Times New Roman", Times, serif;
+    font-style: oblique;
+    font-weight: bold;
+    font-size: 18px;
+    float:right;
+    width:40%;
+    height:500px;
+    background:white;
+    /*border:2px solid black;*/
+    margin-top: 75px;
+    margin-left: 0px;
+    line-height: 15px; 
+  }
+
+
+/*####################################*/
+
+#listContainer{
+  margin-top:15px;
+}
+ 
+#expList ul, li {
+    list-style: none;
+    margin:0;
+    padding:0;
+    cursor: pointer;
+}
+#expList p {
+    margin:0;
+    display:block;
+}
+#expList p:hover {
+    background-color:#121212;
+}
+#expList li {
+    line-height:140%;
+    text-indent:0px;
+    background-position: 1px 8px;
+    padding-left: 20px;
+    background-repeat: no-repeat;
+}
+ 
+/* Collapsed state for list element */
+#expList .collapsed {
+    background-image: url(../img/collapsed.png);
+}
+/* Expanded state for list element
+/* NOTE: This class must be located UNDER the collapsed one */
+#expList .expanded {
+    background-image: url(../img/expanded.png);
+}

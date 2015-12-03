@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/external/jquery-2.1.3.min.js"></script>
+    <script src="js/external/jquery-ui.js"></script>
+    <script src="js/external/d3.v3.js"></script>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <! -- <link rel="icon" href="../../favicon.ico"> -->
+
+    <title>Algorithm Snippets</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#" onClick="history.go(0)">Algorithm Snippets</a>
+        </div>
+        <!-- <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Help</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div> -->
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+
+          <div>
+            <ul id="expList" class="nav nav-sidebar">
+              <li>Sample Graphs
+                <ul>
+                  <li><a href="#" onClick="graph.examples(0);">Example 1</a></li>
+                  <li><a href="#" onClick="graph.examples(1);">Example 2</a></li>
+                  <li><a href="#" onClick="graph.examples(2);">Example 3</a></li>
+                </ul>
+              </li>
+              <li>Algorithms
+                <ul>
+                  <li><a href="#" onclick="Kruskal();">Kruskal</a></li>
+                  <li>Prim</a>
+                    <form class="prims" data-toggle="tooltip" title="Select Vertex"><input type="text" size="1" id="startvertex"></form> 
+                    <input type="submit" value="Go" onclick="Prim();">
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- <div class="btn-group dropdown">
+              <button class=" btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Sample Graphs
+              <span class="caret"></span>
+              </button>
+              <ul class="nav nav-sidebar dropdown-menu">
+                <li><a href="#" onClick="graph.examples(0);">Graph1</a></li>
+                <li><a href="#" onClick="graph.examples(1);">Graph2</a></li>
+                <li><a href="#" onClick="graph.examples(2);">Graph3</a></li>
+              </ul>
+            </div> -->
+
+
+              <!-- <div class=" btn-group dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  MST Algorithms
+                  <span class="caret"></span>
+                </button>
+                <ul class="nav nav-sidebar dropdown-menu">
+                  <li class="active"><a href="#" onclick="Prim();">Prim</a> -->
+                    <!-- <form class="prims">Select Vertex: <input type="number" id="startvertex"></form>  -->
+                  <!-- </li> 
+                  <li><a href="#" onclick="Kruskal();">Kruskal</a></li>
+                </ul>
+              </div> -->
+          <div>
+            <textarea id="myTextarea" rows="5" cols="23" placeholder="Use format [{&quot;v1&quot;:&quot;0&quot;,&quot;v2&quot;:&quot;1&quot;,&quot;w&quot;:&quot;2&quot;},{&quot;v1&quot;:&quot;1&quot;,&quot;v2&quot;:&quot;2&quot;,&quot;w&quot;:&quot;2&quot;},{&quot;v1&quot;:&quot;0&quot;,&quot;v2&quot;:&quot;2&quot;,&quot;w&quot;:&quot;2&quot;}] And start with vertex 0" data-toggle="tooltip" title="Enter edge(u,v) & Weight Information, max vertex 5"></textarea>
+            <button type="button" onclick="myFunction()">Go</button>
+          </div>
+        </div>
+
+        <script>
+          $(".nav li").on("click", function() {
+          $(".nav li").removeClass("active");
+          $(this).addClass("active");
+        });
+
+</script>
+
+
+        <div class="col-sm-1 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Welcome to Algorithm Visualization</h1>
+          <div class="row placeholders side" id="viz" data-toggle="tooltip" title="Graph">
+          </div>
+
+          <div class="btn-group" style="float:right">
+                <button type="button" class="btn btn-default" onclick="gw.backward();" data-toggle="tooltip" title="previous">&#8924;</button>
+                <button type="button" class="btn btn-default" onclick="gw.stop();" data-toggle="tooltip" title="Finish">&#9725;</button>
+                <button type="button" class="btn btn-default" onclick="gw.pause();" data-toggle="tooltip" title="Pause">&#2405;</button>
+                <button type="button" class="btn btn-default" onclick="gw.startplay();" data-toggle="tooltip" title="Play">&#8882;</button>
+                <button type="button" class="btn btn-default" onclick="gw.forward();" data-toggle="tooltip" title="Next">&#8925;</button>
+          </div>
+
+          <div id="snippet" class="sideright">
+              <p id="line1" style="text-decoration: underline;"></p>
+              <p id="line2"></p>
+              <p id="line3"></p>
+              <p id="line4"></p>
+              <p id="line5"></p>
+              <p id="line6"></p>
+              <p id="line7"></p>
+              <p id="line8"></p>
+              <p id="line9"></p>
+              <p id="line10"></p>
+              <p id="line11"></p>
+              <p id="line12"></p>
+          </div>
+<!--
+          <div class="row placeholders" id="graphDraw">
+            <iframe id="placeholderIframe" src="sahu.html" style="width:100%;height:400px;"></iframe>
+          </div>
+-->
+      
+        </div>
+      </div>
+    </div>
+        
+    <script src="js/graph_library/constant.js"></script>
+    <script src="js/graph_library/properties.js"></script>
+    <script src="js/graph_library/misc.js"></script>
+    <script src="js/graph_library/GraphWidget.js"></script>
+    <script src="js/graph_library/GraphVertexWidget.js"></script>
+    <script src="js/graph_library/GraphEdgeWidget.js"></script>
+    <script src="js/graph_library/GraphAlgo.js"></script>
+
+    <script>
+      function loadIframe(elem, src) {
+          $(elem).parent().parent().find(".active").removeClass("active");
+          $(elem).parent().addClass("active");
+          $("#placeholderIframe").attr("src", src);
+
+      }
+
+      var prim = [
+          "MST-PRIM(G,W,r)", 
+          "for each u in G.V;",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; u.key = infinity",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; u.parent = null",
+          "r.key = 0",
+          "Q = G.V",
+          "while Q != null",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; u = Extract-Min(Q)",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for each v in G.adj[u]",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if v in Q and W(u,v) < v.key",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v.parent = u",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v.key = W(u,v)"
+                  ];
+      var kruskal = [
+          "MST-KRUSKAL(G,W)",
+          "A = null",
+          "for each u in G.V",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAKE-SET(V)",
+          "sort the edges of G.E into nondecreasing order by weight w",
+          "for each edge (u,v) in G.E, taken in nondecreasing order by weight",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if FIND-SET(u) != FIND-SET(v)",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A = A U {(u,v)}",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UNION(u,v)",
+          "return A"
+          ];
+
+
+      function prepareList() {
+        $('#expList').find('li:has(ul)')
+          .click( function(event) {
+            if (this == event.target) {
+              $(this).toggleClass('expanded');
+              $(this).children('ul').toggle('medium');
+            }
+            return false;
+          })
+          .addClass('collapsed')
+          .children('ul').hide();
+        };
+       
+        $(document).ready( function() {
+            prepareList();
+        });
+
+      function myFunction() {
+          var x = document.getElementById("myTextarea").value;
+          var obj = JSON.parse(x);
+          graph.CreateNewGraph(obj);
+      }
+
+      function SelectAlgorithm(algo){
+          for(var i = 1; i <= 12; ++i) {
+          var id = "#line"+i;
+          $(id).html("");
+          if(i <= algo.length)
+              $(id).append(algo[i-1]);
+          }
+      }
+      var EXAMPLE_1 = 0, EXAMPLE_2 = 1, EXAMPLE_3 = 2;
+
+      var Graph = function() {
+        var self = this;
+        var graphWidget = new GraphWidget();
+
+
+        var iAL = {};
+        var iEL = {};
+        var amountVertex = 0;
+        var amountEdge = 0;
+
+        this.getGraphWidget = function() { return graphWidget; }
+        
+        this.GetVertexLength = function() {
+            
+            return amountVertex;
+        }
+        this.CreateNewGraph = function(obj){
+          var each;
+          var vertexCount = {}
+          for(each in iEL)
+          {
+            if(each < obj.length)
+            {
+                if(obj[each]["v1"] > 4 || obj[each]["v2"] > 4)
+                alert("Give input of 5 Vertices");
+                if(obj[each]["v1"] == obj[each]["v2"])
+                  alert("Edge between same vertices");
+                if(vertexCount[obj[each]["v1"]] == null || vertexCount[obj[each]["v1"]] != true)
+                  vertexCount[obj[each]["v1"]] = true;
+                 
+                if(vertexCount[obj[each]["v2"]] == null || vertexCount[obj[each]["v2"]] != true)
+                  vertexCount[obj[each]["v2"]] = true;
+                iEL[each]["vertexA"] = obj[each]["v1"];
+                iEL[each]["vertexB"] = obj[each]["v2"];
+                iEL[each]["weight"] = obj[each]["w"];
+            }
+            else
+            {
+              delete iEL[each];
+            }
+            
+          }
+
+          var count=0;
+          for(each in vertexCount)
+            if(vertexCount[each] == true)
+              count++;
+          for(each in iAL)
+          {
+            if(each >= count)
+              delete iAL[each];
+          }
+          amountVertex = count;
+          amountEdge = obj.length;
+          var newState = createState(iAL, iEL);
+          newState["lineNo"] = -1;
+          graphWidget.updateGraph(newState, 500);
+
+        }
+        this.examples = function(id) {
+          
+          switch (id) {
+            case EXAMPLE_1:
+              iAL = {
+                0: { "cx": 120, "cy": 400 },
+                1: { "cx": 20, "cy": 200 },
+                2: { "cx": 420, "cy": 100 },
+                3: { "cx": 412, "cy": 400 },
+                4: { "cx": 170, "cy": 250 } 
+              };
+              iEL = {
+                0: { "vertexA": 0, "vertexB": 1, "weight": 4 },
+                1: { "vertexA": 0, "vertexB": 3, "weight": 6 },
+                2: { "vertexA": 0, "vertexB": 4, "weight": 6 },
+                3: { "vertexA": 1, "vertexB": 2, "weight": 2 },
+                4: { "vertexA": 1, "vertexB": 4, "weight": 2 },
+                5: { "vertexA": 2, "vertexB": 3, "weight": 8 },
+                6: { "vertexA": 3, "vertexB": 4, "weight": 9 }
+              };
+              amountVertex = 5;
+              amountEdge = 7;
+              break;
+          case EXAMPLE_2:
+              iAL = {
+                0: { "cx": 50, "cy": 350 },
+                1: { "cx": 200, "cy": 300 },
+                2: { "cx": 150, "cy": 190 },
+                3: { "cx": 50, "cy": 190 },
+                4: { "cx": 400, "cy": 450 }, 
+                5: { "cx": 250, "cy": 200 },
+                6: { "cx": 160, "cy": 70 },
+                7: { "cx": 300, "cy": 50 },
+                8: { "cx": 320, "cy": 150 },
+                9: { "cx": 450, "cy": 200 }
+              };
+              iEL = {
+                0: { "vertexA": 0, "vertexB": 1, "weight": 3 },
+                1: { "vertexA": 0, "vertexB": 3, "weight": 6 },
+                2: { "vertexA": 0, "vertexB": 4, "weight": 9 },
+                3: { "vertexA": 1, "vertexB": 2, "weight": 2 },
+                4: { "vertexA": 1, "vertexB": 3, "weight": 4 },
+                5: { "vertexA": 1, "vertexB": 4, "weight": 9 },
+                6: { "vertexA": 1, "vertexB": 5, "weight": 9 },
+                7: { "vertexA": 2, "vertexB": 3, "weight": 2 },
+                8: { "vertexA": 2, "vertexB": 5, "weight": 8 },
+                9: { "vertexA": 2, "vertexB": 6, "weight": 9 },
+                10: { "vertexA": 3, "vertexB": 6, "weight": 9 },
+                11: { "vertexA": 4, "vertexB": 5, "weight": 8 },
+                12: { "vertexA": 4, "vertexB": 9, "weight": 18 },
+                13: { "vertexA": 5, "vertexB": 6, "weight": 7 },
+                14: { "vertexA": 5, "vertexB": 8, "weight": 9 },
+                15: { "vertexA": 6, "vertexB": 8, "weight": 5 },
+                16: { "vertexA": 6, "vertexB": 7, "weight": 4 },
+                17: { "vertexA": 7, "vertexB": 8, "weight": 1 },
+                18: { "vertexA": 7, "vertexB": 9, "weight": 4 },
+                19: { "vertexA": 8, "vertexB": 9, "weight": 3 },
+                20: { "vertexA": 5, "vertexB": 9, "weight": 10 }
+              };
+              amountVertex = 10;
+              amountEdge = 21;
+              break;
+          case EXAMPLE_3:
+              iAL = {
+                0: { "cx": 50, "cy": 50 },
+                1: { "cx": 250, "cy": 100 },
+                2: { "cx": 150, "cy": 230 },
+                3: { "cx": 70, "cy": 250 },
+                4: { "cx": 350, "cy": 70 }, 
+                5: { "cx": 300, "cy": 400 },
+                6: { "cx": 150, "cy": 350 },
+                7: { "cx": 70, "cy": 400 },
+                8: { "cx": 350, "cy": 200 },
+                9: { "cx": 500, "cy": 40 },
+                10: { "cx": 440, "cy": 160 },
+                11: { "cx": 400, "cy": 450 },          
+              };
+              iEL = {
+                0: { "vertexA": 0, "vertexB": 1, "weight": 2661 },
+                1: { "vertexA": 0, "vertexB": 2, "weight": 2161 },
+                2: { "vertexA": 0, "vertexB": 3, "weight": 1306 },
+                3: { "vertexA": 1, "vertexB": 4, "weight": 661 },
+                4: { "vertexA": 1, "vertexB": 2, "weight": 1483 },
+                5: { "vertexA": 1, "vertexB": 5, "weight": 1532 },
+                6: { "vertexA": 2, "vertexB": 5, "weight": 1258 },
+                7: { "vertexA": 2, "vertexB": 6, "weight": 1225 },
+                8: { "vertexA": 3, "vertexB": 6, "weight": 919 },
+                9: { "vertexA": 3, "vertexB": 7, "weight": 629 },
+                10: { "vertexA": 4, "vertexB": 9, "weight": 1613 },
+                11: { "vertexA": 4, "vertexB": 8, "weight": 1145 },
+                12: { "vertexA": 5, "vertexB": 6, "weight": 1983 },
+                13: { "vertexA": 5, "vertexB": 8, "weight": 2113 },
+                14: { "vertexA": 5, "vertexB": 11, "weight": 2161 },
+                15: { "vertexA": 6, "vertexB": 7, "weight": 435 },
+                16: { "vertexA": 8, "vertexB": 9, "weight": 725 },
+                17: { "vertexA": 8, "vertexB": 10, "weight": 383 },
+                18: { "vertexA": 8, "vertexB": 11, "weight": 1709 },
+                19: { "vertexA": 9, "vertexB": 10, "weight": 338 },
+                20: { "vertexA": 9, "vertexB": 11, "weight": 2145 }
+              };
+              amountVertex = 12;
+              amountEdge = 21;
+              break;
+          }
+        
+          var newState = createState(iAL, iEL);
+          newState["lineNo"] = -1;
+          graphWidget.updateGraph(newState, 500);
+
+          return true;
+        }
+
+        function createState(iALObject, iELObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed) {
+          var isDefaultGrey = true;
+          if ((vertexHighlighted == null) && (edgeHighlighted == null) && (vertexTraversed == null) && (edgeTraversed == null))
+            isDefaultGrey = false;
+          if (vertexHighlighted == null)
+            vertexHighlighted = {};
+          if (edgeHighlighted == null)
+            edgeHighlighted = {};
+          if (vertexTraversed == null)
+            vertexTraversed = {};
+          if (edgeTraversed == null)
+            edgeTraversed = {};
+         
+          var key;
+          var state = {
+            "vl": {},
+            "el": {}
+          };
+
+          for (key in iALObject) {
+            state["vl"][key] = {};
+
+            state["vl"][key]["cx"] = iALObject[key]["cx"];
+            state["vl"][key]["cy"] = iALObject[key]["cy"];
+            state["vl"][key]["text"] = key;
+            state["vl"][key]["state"] = VERTEX_DEFAULT;
+          }
+          for (key in iELObject) {
+            state["el"][key] = {};
+
+            state["el"][key]["vertexA"] = iELObject[key]["vertexA"];
+            state["el"][key]["vertexB"] = iELObject[key]["vertexB"];
+            state["el"][key]["type"] = EDGE_TYPE_UDE;
+            state["el"][key]["weight"] = iELObject[key]["weight"];
+            state["el"][key]["state"] = EDGE_DEFAULT;  
+            state["el"][key]["displayWeight"] = true;
+          }
+          
+          for (key in vertexHighlighted)
+            state["vl"][key]["state"] = VERTEX_BLUE_FILL;
+          for (key in edgeHighlighted)
+            state["el"][key]["state"] = EDGE_BLUE;
+          for (key in vertexTraversed)
+            state["vl"][key]["state"] = VERTEX_GREEN_FILL;
+          for (key in edgeTraversed)
+            state["el"][key]["state"] = EDGE_GREEN;
+
+          return state;
+        }
+        this.prim = function(startIndex){
+            graphWidget.Reset();
+            var start = startIndex;
+            var nodes = [];
+            var stateList = [];
+            for(key in iAL)
+            {
+              var cs = createState(iAL, iEL);
+              cs["lineNo"] = [2];
+              stateList.push(cs);
+              var cs = createState(iAL, iEL);
+              cs["lineNo"] = [3];
+              stateList.push(cs);
+              var cs = createState(iAL, iEL);
+              cs["lineNo"] = [4];
+              stateList.push(cs);
+              
+              var temp = {
+                 "vertex":key,
+                 "key":Infinity,
+                 "parent":null
+                  }
+              nodes[key] = temp;
+            }
+            
+            
+            function printStateList(cs,index){
+                //console.log("############### "+index+" ###############");
+                
+                 for(each in cs["el"])
+                 {
+                     //console.log(cs["el"][each]["vertexA"] + " " + cs["el"][each]["vertexB"] + " " + cs["el"][each]["state"]);
+                 }
+                 for(each in cs["vl"])
+                 {
+                     //console.log(cs["vl"][each]["text"] + " " + cs["vl"][each]["state"]);
+                 }
+                
+            }
+            
+            var vertexHighlighted = {}, edgeHighlighted = {}, vertexTraversed = {}, edgeTraversed = {};
+            cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+            cs["lineNo"] = [5];
+            stateList.push(cs);
+            cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+            cs["lineNo"] = [6];
+            stateList.push(cs);
+            nodes[start]["key"] = 0;
+            var pq = new priorityQueue();
+            pq.BuildMinHeap(nodes);
+            while(nodes.length > 0)
+            {
+                var u = pq.HeapExtractMin(nodes);
+                //console.log(u["parent"]);
+                vertexHighlighted[u["vertex"]] = true;
+                cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                cs["lineNo"] = [7];
+                stateList.push(cs);
+                cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                cs["lineNo"] = [8];
+                stateList.push(cs);
+                //printStateList(cs,stateList.length);
+                
+                if(u["parent"]!= null)
+                {
+                    for(key in iEL)
+                    {
+                        if((iEL[key]["vertexA"] == u["vertex"] && iEL[key]["vertexB"] == u["parent"])||(iEL[key]["vertexB"] == u["vertex"] && iEL[key]["vertexA"] == u["parent"]))
+                        {
+                            edgeTraversed[key] = true;
+                            cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                            stateList.push(cs);
+                        }
+                    }
+                }
+                
+                vertexTraversed[u["vertex"]] = true;
+                cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                stateList.push(cs);
+                //printStateList(cs,stateList.length);
+                for(key in iEL)
+                {
+                    cs["lineNo"] = [9];
+                    var v = null;
+                    if(iEL[key]["vertexA"] == u["vertex"])
+                    {
+                        v = iEL[key]["vertexB"];
+                    }
+                    else if(iEL[key]["vertexB"] == u["vertex"])
+                    {
+                        v = iEL[key]["vertexA"];
+                    }
+                    if(v != null)
+                    {
+                        vertexHighlighted[v] = true;
+                        cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                        cs["lineNo"] = [9];
+                        stateList.push(cs);
+                        cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                        cs["lineNo"] = [10];
+                        stateList.push(cs);
+                        cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                        cs["lineNo"] = [11];
+                        stateList.push(cs);
+                        //printStateList(cs,stateList.length);
+                        var each;
+                        for(each in nodes)
+                        {
+                            if(nodes[each]["vertex"] == v)
+                            {
+                                
+                                if(iEL[key]["weight"] < nodes[each]["key"])
+                                {
+                                  nodes[each]["parent"] = u["vertex"];
+                                  nodes[each]["key"] = iEL[key]["weight"];
+                                }
+                                break;
+                            }
+                        }
+                        
+                    }
+                    
+                }
+                pq.BuildMinHeap(nodes);
+            }
+            cs = createState(iAL, iEL,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+            stateList.push(cs);
+            //printStateList(cs,stateList.length);
+            SelectAlgorithm(prim);
+            graphWidget.startAnimation(stateList);
+            
+        };
+        this.kruskal = function(){
+            graphWidget.Reset();
+            var stateList = [];
+            var vertexHighlighted = {}, edgeHighlighted = {}, vertexTraversed = {}, edgeTraversed = {};
+            var cs = createState(iAL, iEL);
+            var ds = new disjointset();
+            var key;
+            cs["lineNo"] = [2];
+            stateList.push(cs);
+            for(key in iAL)
+            { 
+                cs = createState(iAL, iEL);
+                cs["lineNo"] = [3];
+                stateList.push(cs);
+                cs = createState(iAL, iEL);
+                cs["lineNo"] = [4];
+                stateList.push(cs);
+                ds.makeset(key);
+            }
+            
+            var edge = deepCopy(iEL);
+            key = {};
+            var j = 0;
+            for(i in iEL){
+                key = edge[i];
+                j = i - 1;
+                while(j >= 0 && edge[j]["weight"] > key["weight"])
+                {
+                    edge[j+1] = edge[j];
+                    j -= 1;
+                }
+                edge[j+1] = key;
+            }
+            cs = createState(iAL, iEL);
+            cs["lineNo"] = [5];
+            stateList.push(cs);
+           function printStateList(cs,index){
+                console.log("############### "+index+" ###############");
+                
+                 for(each in cs["el"])
+                 {
+                     console.log(cs["el"][each]["vertexA"] + " " + cs["el"][each]["vertexB"] + " " + cs["el"][each]["state"]);
+                 }
+                 for(each in cs["vl"])
+                 {
+                     console.log(cs["vl"][each]["text"] + " " + cs["vl"][each]["state"]);
+                 }
+                
+            }
+            
+            var i;
+            for(key in edge)
+            {
+                cs["lineNo"] = [6];
+          for(each in iEL)
+          {
+          if(edge[key]["vertexA"] == iEL[each]["vertexA"] && edge[key]["vertexB"] == iEL[each]["vertexB"])
+          {
+            i = each;
+          }
+          }
+
+                cs = createState(iAL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                stateList.push(cs);
+          //printStateList(cs, stateList.length);
+                edgeHighlighted[i] = true;
+                vertexHighlighted[iEL[i]["vertexA"]] = true;
+                vertexHighlighted[iEL[i]["vertexB"]] = true;
+                cs["lineNo"] = [7];
+                cs = createState(iAL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                stateList.push(cs);
+                //printStateList(cs, stateList.length);
+                u = ds.findset(iEL[i]["vertexA"]);
+                v = ds.findset(iEL[i]["vertexB"]);
+                if(u != v)
+                {
+                    cs = createState(iAL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                    cs["lineNo"] = [8];
+                    stateList.push(cs);
+                    cs = createState(iAL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+                    cs["lineNo"] = [9];
+                    stateList.push(cs);
+                    edgeTraversed[i] = true;
+                    vertexTraversed[u] = true;
+                    vertexTraversed[v] = true;
+                    ds.union(u,v);
+                }
+                
+          //printStateList(cs, stateList.length);
+            }
+            cs = createState(iAL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+            cs["lineNo"] = [10];
+            stateList.push(cs);
+            //printStateList(cs, stateList.length);
+            SelectAlgorithm(kruskal);
+            graphWidget.startAnimation(stateList);
+            return true;
+        }
+      }
+      var graph = new Graph();
+      graph.examples(EXAMPLE_1);
+      var gw = graph.getGraphWidget();
+
+
+      function Kruskal() { 
+          graph.kruskal();
+          
+      }
+
+      function Prim() { 
+          var start = document.getElementById("startvertex").value;
+          //var start = 0;
+          var startIndex = parseInt(start);
+          if(start != null && startIndex >= 0 && startIndex < graph.GetVertexLength())
+          {
+              graph.prim(startIndex);
+          }
+          else if(start === "")
+          {
+              startIndex = 0;
+              graph.prim(startIndex);
+          }
+          else
+          {
+              alert("Invalid Input");
+          }
+          
+      }
+
+    </script>
+          
+  </body>
+</html>
